@@ -1,16 +1,20 @@
-# instagram_flutter
+# Instagram Clone
 
-A new Flutter project.
+A clone of Instagram app for web, android and ios.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Email & Password authentication
+- Share & display posts (with caption)
+- Like & comment on posts
+- Search users
+- Follow users
+- Display user's posts, followers & followings
 
-A few resources to get you started if this is your first Flutter project:
+## Technologies Used
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Server:	
+	* Firebase Auth: For user authentication
+	* Firebase Firestore: For storing users' data
+	* Firebase Storage: For storing images (posts & profile photos)
+* Client: Flutter for User interface
