@@ -4,7 +4,7 @@ import 'package:instagram_flutter/utils/colors.dart';
 import 'package:instagram_flutter/utils/global_variable.dart';
 
 class WebScreenLayout extends StatefulWidget {
-  const WebScreenLayout({Key? key}) : super(key: key);
+  const WebScreenLayout({super.key});
 
   @override
   State<WebScreenLayout> createState() => _WebScreenLayoutState();
@@ -16,14 +16,14 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
 
   @override
   void initState() {
-    super.initState();
     pageController = PageController();
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     pageController.dispose();
+    super.dispose();
   }
 
   void onPageChanged(int page) {

@@ -9,7 +9,7 @@ import 'package:instagram_flutter/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class AddPostScreen extends StatefulWidget {
-  const AddPostScreen({Key? key}) : super(key: key);
+  const AddPostScreen({super.key});
 
   @override
   State<AddPostScreen> createState() => _AddPostScreenState();
@@ -18,49 +18,50 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   bool isLoading = false;
-  final TextEditingController _descriptionController = TextEditingController();
-  late final UserProvider userProvider;
+  late final TextEditingController _descriptionController;
 
   @override
   void initState() {
-    userProvider = Provider.of<UserProvider>(context);
+    _descriptionController = TextEditingController();
     super.initState();
   }
 
-  _selectImage(BuildContext parentContext) async {
+  void _selectImage(BuildContext parentContext) async {
     return showDialog(
       context: parentContext,
       builder: (BuildContext context) {
         return SimpleDialog(
           title: const Text('Create a Post'),
-          children: <Widget>[
+          children: [
             SimpleDialogOption(
-                padding: const EdgeInsets.all(20),
-                child: const Text('Take a photo'),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  Uint8List? file = await pickImage(ImageSource.camera);
-                  setState(() {
-                    _file = file;
-                  });
-                }),
+              padding: const EdgeInsets.all(20),
+              child: const Text('Take a photo'),
+              onPressed: () async {
+                Navigator.pop(context);
+                Uint8List? file = await pickImage(ImageSource.camera);
+                setState(() {
+                  _file = file;
+                });
+              },
+            ),
             SimpleDialogOption(
-                padding: const EdgeInsets.all(20),
-                child: const Text('Choose from Gallery'),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  Uint8List? file = await pickImage(ImageSource.gallery);
-                  setState(() {
-                    _file = file;
-                  });
-                }),
+              padding: const EdgeInsets.all(20),
+              child: const Text('Choose from Gallery'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                Uint8List? file = await pickImage(ImageSource.gallery);
+                setState(() {
+                  _file = file;
+                });
+              },
+            ),
             SimpleDialogOption(
               padding: const EdgeInsets.all(20),
               child: const Text("Cancel"),
               onPressed: () {
                 Navigator.pop(context);
               },
-            )
+            ),
           ],
         );
       },
@@ -101,10 +102,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
       setState(() {
         isLoading = false;
       });
-      showSnackBar(
-        context,
-        err.toString(),
-      );
+      if (context.mounted) {
+        showSnackBar(
+          context,
+          err.toString(),
+        );
+      }
     }
   }
 
@@ -116,22 +119,25 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _descriptionController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _file == null
-        ? Center(
-            child: IconButton(
-              icon: const Icon(
-                Icons.upload,
-              ),
-              onPressed: () => _selectImage(context),
-            ),
-          )
-        : Scaffold(
+    if (_file == null) {
+      return Center(
+        child: IconButton(
+          icon: const Icon(
+            Icons.upload,
+          ),
+          onPressed: () => _selectImage(context),
+        ),
+      );
+    } else {
+      return Consumer<UserProvider>(
+        builder: (context, user, child) {
+          return Scaffold(
             appBar: AppBar(
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
@@ -145,9 +151,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
               actions: [
                 TextButton(
                   onPressed: () => postImage(
-                    userProvider.getUser.uid,
-                    userProvider.getUser.username,
-                    userProvider.getUser.photoUrl,
+                    user.getUser!.uid,
+                    user.getUser!.username,
+                    user.getUser!.photoUrl,
                   ),
                   child: const Text(
                     "Post",
@@ -172,7 +178,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   children: <Widget>[
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                        userProvider.getUser.photoUrl,
+                        user.getUser!.photoUrl,
                       ),
                     ),
                     SizedBox(
@@ -206,5 +212,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ],
             ),
           );
+        },
+      );
+    }
   }
 }

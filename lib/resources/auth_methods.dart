@@ -24,7 +24,7 @@ class AuthMethods {
     required String password,
     required String username,
     required String bio,
-    required Uint8List? file,
+    required Uint8List file,
   }) async {
     String res = "Some error occurred";
     try {
@@ -39,14 +39,11 @@ class AuthMethods {
           password: password,
         );
 
-        String photoUrl = "https://i.stack.imgur.com/l60Hf.png";
-        if (file != null) {
-          photoUrl = await StorageMethods.uploadImageToStorage(
-            childName: "profilePics",
-            file: file,
-            isPost: false,
-          );
-        }
+        String photoUrl = await StorageMethods.uploadImageToStorage(
+          childName: "profilePics",
+          file: file,
+          isPost: false,
+        );
 
         // Add user to database
         await FirebaseFirestore.instance

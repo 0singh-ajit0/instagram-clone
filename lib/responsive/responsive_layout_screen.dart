@@ -6,11 +6,12 @@ import 'package:provider/provider.dart';
 class ResponsiveLayout extends StatefulWidget {
   final Widget mobileScreenLayout;
   final Widget webScreenLayout;
+
   const ResponsiveLayout({
-    Key? key,
+    super.key,
     required this.mobileScreenLayout,
     required this.webScreenLayout,
-  }) : super(key: key);
+  });
 
   @override
   State<ResponsiveLayout> createState() => _ResponsiveLayoutState();
@@ -19,13 +20,15 @@ class ResponsiveLayout extends StatefulWidget {
 class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   @override
   void initState() {
-    super.initState();
     addData();
+    super.initState();
   }
 
   addData() async {
-    UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
+    UserProvider userProvider = Provider.of<UserProvider>(
+      context,
+      listen: false,
+    );
     await userProvider.refreshUser();
   }
 

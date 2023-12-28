@@ -9,11 +9,11 @@ import 'package:instagram_flutter/widgets/comment_card.dart';
 import 'package:provider/provider.dart';
 
 class CommentsScreen extends StatefulWidget {
-  final postId;
-  const CommentsScreen({Key? key, required this.postId}) : super(key: key);
+  final String postId;
+  const CommentsScreen({super.key, required this.postId});
 
   @override
-  _CommentsScreenState createState() => _CommentsScreenState();
+  State<CommentsScreen> createState() => _CommentsScreenState();
 }
 
 class _CommentsScreenState extends State<CommentsScreen> {
@@ -37,16 +37,18 @@ class _CommentsScreenState extends State<CommentsScreen> {
         commentEditingController.text = "";
       });
     } catch (err) {
-      showSnackBar(
-        context,
-        err.toString(),
-      );
+      if (context.mounted) {
+        showSnackBar(
+          context,
+          err.toString(),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<UserProvider>(context).getUser;
+    final User user = Provider.of<UserProvider>(context).getUser!;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,8 +64,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
             .doc(widget.postId)
             .collection('comments')
             .snapshots(),
-        builder: (context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        builder: (
+          context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+        ) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
